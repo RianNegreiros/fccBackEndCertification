@@ -24,7 +24,10 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-
+app.get("/api/:date?", (req, res) => {
+  let d = new Date(req.params.date);
+  res.send({unix: d.getTime(), utc: d.toGMTString()})
+})
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
