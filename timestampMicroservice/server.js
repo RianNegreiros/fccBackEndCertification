@@ -25,7 +25,9 @@ app.get("/api/hello", function (req, res) {
 });
 
 app.get("/api/:date?", (req, res) => {
-  let d = new Date(req.params.date);
+  let date = req.params.date
+  isNaN(date) ? date : date = +req.params.date
+  let d = new Date(date);
   res.send({unix: d.getTime(), utc: d.toGMTString()})
 })
 
