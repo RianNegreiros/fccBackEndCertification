@@ -28,8 +28,17 @@ app.get("/api/:date?", (req, res) => {
   let date = req.params.date
   isNaN(date) ? date : date = +req.params.date
   let d = new Date(date);
-  res.send({unix: d.getTime(), utc: d.toGMTString()})
+
+  if (req.params.date === undefined) {
+    res.send({ unix: new Date().getTime(), utc: new Date().toGMTString() })
+  } else if (isNaN(d)) {
+
+    res.send({error: d.toString()})
+  } else {
+    res.send({unix: d.getTime(), utc: d.toGMTString()})
+  }
 })
+
 
 // listen for requests :)
 var listener = app.listen(process.env.PORT, function () {
