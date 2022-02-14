@@ -73,6 +73,47 @@ app.get("/api/users", (req, res) => {
   });
 });
 
+// Post route to get user exercises
+app.post("/api/users/:_id/exercises", async (req, res) => {
+  let {description, duration, date } = req.body;
+  let id = req.params._id;
+  // If any date is given use current time
+  if (!date) {
+    date = new Date().toDateString();
+  } else {
+    date = new Date(date).toDateString();
+  }
+
+  // Try to find user by id
+  try{
+    let findOne = await User.findOne({
+      _id: id 
+    })
+    // If user exists, add exercise
+    if (findOne){
+      console.log("Retrieving Stored User")
+      findOne.count++;
+      findOne.log.push({
+        description: description,
+        duration: parseInt(duration),
+        date: date
+      });
+      findOne.save();
+
+      res.json({
+          username: findOne.username,
+          description: description,
+          duration: parseInt(duration),
+          _id: id,
+          date: date
+        });
+    }
+    // If user doesn't exist, return error
+  } catch (err) {
+    console.error(err);
+  }
+});
+
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
 })
