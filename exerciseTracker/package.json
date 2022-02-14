@@ -11,7 +11,8 @@
 		"express": "^4.16.4",
 		"cors": "^2.8.5",
 		"mongodb": "^3.5.4",
-    "mongoose": "^5.9.3"
+    "mongoose": "^5.9.3",
+		"body-parser": "^1.19.0"
 	},
 	"repository": {
 		"url": "https://github.com/freeCodeCamp/boilerplate-project-exercisetracker"
