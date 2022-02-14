@@ -63,6 +63,16 @@ app.post("/api/users", (req, res) => {
   });
 });
 
+// Route to get all users
+app.get("/api/users", (req, res) => {
+  User.find({}, (err, users) => {
+    if (err) {
+      console.log('Find() error')
+    };
+    res.json(users);
+  });
+});
+
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
 })
