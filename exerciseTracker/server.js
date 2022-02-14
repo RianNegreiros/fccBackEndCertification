@@ -114,6 +114,53 @@ app.post("/api/users/:_id/exercises", async (req, res) => {
   }
 });
 
+app.get('/api/users/:_id/logs', async (req, res) => {
+  const { _id } = req.params;
+  if (_id) {
+    await User.findById(_id, (err, userFound) => {
+      if (err) {
+        res.send("FindById() error");
+      }
+      let resObj = {
+        _id: userFound._id,
+        username: userFound.username,
+        count: userFound.log.length
+      }
+
+      if (req.query.limit) {
+        resObj.log = userFound.log.slice(0, req.query.limit);
+      } else {
+        resObj.log = userFound.log.map(log => ({
+          description: log.description,
+          duration: log.duration,
+          date: new Date(log.date).toDateString()
+        }));
+      }
+
+      if (req.query.form || req.query.to) {
+        let fromDate = new Date();
+        let toDate = new Date();
+
+        if (req.query.from) {
+          fromDate = new Date(req.query.from)
+        }
+
+        if (req.query.to) {
+          toDate = new Date(req.query.to);
+        }
+
+        fromDate = fromDate.getTime()
+        toDate = toDate.getTime()
+
+        resObj.log = userFound.log.filter((session) => {
+          return new Date(session.date).getTime();
+        });
+      }
+      res.json(resObj);
+    });
+  }
+});
+
 const listener = app.listen(process.env.PORT || 3000, () => {
   console.log('Your app is listening on port ' + listener.address().port)
 })
